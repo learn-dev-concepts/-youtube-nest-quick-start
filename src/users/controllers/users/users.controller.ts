@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   ParseBoolPipe,
   ParseIntPipe,
@@ -27,20 +29,21 @@ export class UsersController {
 
   @Get('query')
   getUsersWithQuery(@Query('sortDesc', ParseBoolPipe) total: boolean) {
-    console.log(total);
     return total;
   }
 
   @Get(':id')
-  getUserById(@Param('id', ParseIntPipe) id: number) {
-    console.log(typeof id);
-    return { id };
+  getUserById(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    const user = this.userService.fetchUserById(id);
+    if (!user)
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+
+    return user;
   }
 
   @Post()
   @UsePipes(new ValidationPipe())
   createUser(@Body() userPayload: CreateUserDto) {
-    console.log('userPayload', userPayload.email);
-    return {};
+    return this.userService.createUser(userPayload);
   }
 }
