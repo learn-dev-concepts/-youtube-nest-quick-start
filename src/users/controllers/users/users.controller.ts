@@ -14,12 +14,15 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/users/dtos/createUser.dto';
+import { UsersService } from 'src/users/services/users/users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private userService: UsersService) {}
+
   @Get()
   getUsers() {
-    return [{ username: 'Anson', email: 'anson@gmail.com' }];
+    return this.userService.fetchUsers();
   }
 
   @Get('query')
