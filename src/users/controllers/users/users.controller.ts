@@ -8,4 +8,10 @@ export class UsersController {
   getUsers() {
     return [{ username: 'Anson', email: 'anson@gmail.com' }];
   }
+
+  @Post()
+  createUser(@Body() userPayload: CreateUserDto) {
+    console.log('userPayload', userPayload.email);
+    return {};
+  }
 }
